@@ -3,6 +3,7 @@ package ru.perm.trubnikov.sharevia;
 import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //share("com.maskyn.fileeditor");
-                share("");
+                //share("com.android.mms");
+                initShareIntent("android.mms");
             }
 
         });
@@ -105,6 +108,34 @@ public class MainActivity extends ActionBarActivity {
             Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Select app to share");
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
             startActivity(chooserIntent);
+        }
+    }
+
+
+    // http://stackoverflow.com/questions/6827407/how-to-customize-share-intent-in-android
+    private void initShareIntent(String pckg) {
+        boolean found = false;
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+
+        // gets the list of intents that can be loaded.
+        List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
+        if (!resInfo.isEmpty()){
+            for (ResolveInfo info : resInfo) {
+                if (info.activityInfo.packageName.toLowerCase().contains(pckg) ||
+                        info.activityInfo.name.toLowerCase().contains(pckg) ) {
+                    share.putExtra(Intent.EXTRA_SUBJECT,  "subject");
+                    share.putExtra(Intent.EXTRA_TEXT,     "your text");
+                   // share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(myPath)) ); // Optional, just if you wanna share an image.
+                    share.setPackage(info.activityInfo.packageName);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                return;
+
+            startActivity(Intent.createChooser(share, "Select"));
         }
     }
 

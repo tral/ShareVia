@@ -3,7 +3,6 @@ package ru.perm.trubnikov.sharevia;
 import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
@@ -12,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,13 +117,13 @@ public class MainActivity extends ActionBarActivity {
 
         // gets the list of intents that can be loaded.
         List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
-        if (!resInfo.isEmpty()){
+        if (!resInfo.isEmpty()) {
             for (ResolveInfo info : resInfo) {
                 if (info.activityInfo.packageName.toLowerCase().contains(pckg) ||
-                        info.activityInfo.name.toLowerCase().contains(pckg) ) {
-                    share.putExtra(Intent.EXTRA_SUBJECT,  "subject");
-                    share.putExtra(Intent.EXTRA_TEXT,     "your text");
-                   // share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(myPath)) ); // Optional, just if you wanna share an image.
+                        info.activityInfo.name.toLowerCase().contains(pckg)) {
+                    share.putExtra(Intent.EXTRA_SUBJECT, "subject");
+                    share.putExtra(Intent.EXTRA_TEXT, "your text");
+                    // share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(myPath)) ); // Optional, just if you wanna share an image.
                     share.setPackage(info.activityInfo.packageName);
                     found = true;
                     break;

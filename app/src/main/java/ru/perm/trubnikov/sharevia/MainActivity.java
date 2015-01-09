@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
             if (!found)
                 return;
 
-            startActivity(Intent.createChooser(share, "Select"));
+            startActivity(Intent.createChooser(share, ""));
         }
     }
 
